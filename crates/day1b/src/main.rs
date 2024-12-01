@@ -1,28 +1,21 @@
-use std::collections::HashMap;
 use std::time::Instant;
 
 fn main() {
     let start = Instant::now();
 
-    let mut frequencies: HashMap<i32, i32> = HashMap::new();
+    let (mut vals, mut frequencies) = (Vec::with_capacity(1000), [0; 100_000]);
 
-    let vals = include_str!("input.txt")
-        .lines()
-        .map(|l| {
-            let mut iter = l.split("   ");
-            let col1 = iter.next().unwrap().parse::<i32>().unwrap();
-            let col2 = iter.next().unwrap().parse::<i32>().unwrap();
-
-            *frequencies.entry(col2).or_insert(0) += 1;
-
-            col1
-        })
-        .collect::<Vec<i32>>();
+    include_str!("input.txt").lines().for_each(|l| {
+        let mut iter = l.split("   ");
+        vals.push(iter.next().unwrap().parse::<usize>().unwrap());
+        let col2 = iter.next().unwrap().parse::<usize>().unwrap();
+        frequencies[col2] += 1;
+    });
 
     let ans = vals
         .into_iter()
-        .map(|val| val * frequencies.get(&val).unwrap_or(&0))
-        .sum::<i32>();
+        .map(|val| val * frequencies[val])
+        .sum::<usize>();
 
     let elapsed = start.elapsed();
 
