@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 const XMAS: &[u8; 4] = b"XMAS";
 const SAMX: &[u8; 4] = b"SAMX";
 
@@ -37,6 +39,8 @@ fn check_pattern(
 }
 
 fn main() {
+    let start = Instant::now();
+
     let lines = include_bytes!("input.txt")
         .split(|&b| b == b'\n')
         .collect::<Vec<_>>();
@@ -93,5 +97,9 @@ fn main() {
         });
     }
 
-    dbg!(c1 + c2);
+    let fc = c1 + c2;
+
+    let elapsed = start.elapsed();
+
+    dbg!(elapsed, fc);
 }
