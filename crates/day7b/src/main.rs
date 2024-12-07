@@ -1,18 +1,24 @@
-use std::time::Instant;
-
 use rayon::prelude::*;
+use std::time::Instant;
 
 fn solve_dfs(terms: &[usize], prev: usize, res: usize) -> bool {
     if terms.len() == 0 || prev > res {
         return prev == res;
     }
-    solve_dfs(&terms[1..], terms[0] * prev, res) || solve_dfs(&terms[1..], terms[0] + prev, res)
+
+    solve_dfs(&terms[1..], terms[0] * prev, res)
+        || solve_dfs(&terms[1..], terms[0] + prev, res)
+        || solve_dfs(
+            &terms[1..],
+            prev * 10usize.pow(terms[0].to_string().len() as u32),
+            res,
+        )
 }
 
 fn main() {
     let start = Instant::now();
 
-    let input = include_bytes!("input_test.txt")
+    let input = include_bytes!("input.txt")
         .split(|&b| b == b'\n')
         .par_bridge()
         .map(|l| {
